@@ -89,6 +89,3 @@ Found a rendering issue? Have a feature request?
 
 **[3D Viewer for Google Drive](https://3DViewer.co)** — View STL, OBJ, GLB and other 3D files directly in Google Drive.
 
----
-
-Made with ☕ in Portugal by a solo dev who got tired of exporting PDFs.

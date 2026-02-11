@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catho Guesser - Devinez les églises du monde</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=EB+Garamond:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <!-- ========== SÉLECTEUR DE LANGUE ========== -->
+  <div id="lang-selector" aria-label="Langue">
+    <button class="lang-btn active" data-lang="fr" title="Français">FR</button>
+    <button class="lang-btn" data-lang="en" title="English">EN</button>
+    <button class="lang-btn" data-lang="es" title="Español">ES</button>
+  </div>
+
+  <!-- ========== ÉLÉMENTS DÉCORATIFS GLOBAUX ========== -->
+  <div class="decor-layer" aria-hidden="true">
+    <!-- Croix coins -->
+    <svg class="decor-cross decor-cross-tl" viewBox="0 0 40 60" width="40" height="60">
+      <rect x="15" y="0" width="10" height="60" fill="currentColor"/>
+      <rect x="0" y="12" width="40" height="10" fill="currentColor"/>
+    </svg>
+    <svg class="decor-cross decor-cross-tr" viewBox="0 0 40 60" width="40" height="60">
+      <rect x="15" y="0" width="10" height="60" fill="currentColor"/>
+      <rect x="0" y="12" width="40" height="10" fill="currentColor"/>
+    </svg>
+    <svg class="decor-cross decor-cross-bl" viewBox="0 0 40 60" width="40" height="60">
+      <rect x="15" y="0" width="10" height="60" fill="currentColor"/>
+      <rect x="0" y="12" width="40" height="10" fill="currentColor"/>
+    </svg>
+    <svg class="decor-cross decor-cross-br" viewBox="0 0 40 60" width="40" height="60">
+      <rect x="15" y="0" width="10" height="60" fill="currentColor"/>
+      <rect x="0" y="12" width="40" height="10" fill="currentColor"/>
+    </svg>
+
+    <!-- Colombe gauche -->
+    <svg class="decor-dove decor-dove-left" viewBox="0 0 80 60" width="80" height="60">
+      <path d="M10 40 Q20 10 50 20 Q45 15 55 10 Q50 18 60 15 Q52 22 55 25 Q70 20 75 30 Q65 28 60 32 Q55 45 35 50 Q25 52 15 48 Z" fill="currentColor"/>
+      <circle cx="22" cy="32" r="2" fill="#4a0a12"/>
+    </svg>
+    <!-- Colombe droite (miroir) -->
+    <svg class="decor-dove decor-dove-right" viewBox="0 0 80 60" width="80" height="60" style="transform: scaleX(-1)">
+      <path d="M10 40 Q20 10 50 20 Q45 15 55 10 Q50 18 60 15 Q52 22 55 25 Q70 20 75 30 Q65 28 60 32 Q55 45 35 50 Q25 52 15 48 Z" fill="currentColor"/>
+      <circle cx="22" cy="32" r="2" fill="#4a0a12"/>
+    </svg>
+
+    <!-- Petites croix dispersées -->
+    <span class="decor-mini-cross" style="top:15%;left:5%">&#10013;</span>
+    <span class="decor-mini-cross" style="top:45%;right:3%">&#10013;</span>
+    <span class="decor-mini-cross" style="top:75%;left:8%">&#10013;</span>
+    <span class="decor-mini-cross" style="bottom:10%;right:6%">&#10013;</span>
+    <span class="decor-mini-cross" style="top:30%;right:10%">&#9768;</span>
+    <span class="decor-mini-cross" style="bottom:25%;left:4%">&#9768;</span>
+  </div>
+
+  <!-- ========== HEADER ========== -->
+  <header id="header" class="hidden">
+    <div class="header-inner">
+      <div class="header-left">
+        <span class="logo">&#10013; Catho Guesser</span>
+      </div>
+      <div class="header-stats">
+        <div class="stat">
+          <span class="stat-label" data-i18n="score">Score</span>
+          <span class="stat-value" id="score-display">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label" data-i18n="streak">Série</span>
+          <span class="stat-value" id="streak-display">0</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label" data-i18n="round">Manche</span>
+          <span class="stat-value" id="progress-display">1/20</span>
+        </div>
+      </div>
+    </div>
+    <!-- Barre de progression chapelet -->
+    <div id="progress-bar-container">
+      <div id="progress-bar"></div>
+      <div id="progress-beads"></div>
+    </div>
+  </header>
+
+  <!-- ========== MAIN ========== -->
+  <main id="app">
+
+    <!-- ===== ÉCRAN D'ACCUEIL ===== -->
+    <div id="screen-start" class="screen active">
+      <div class="start-content">
+        <!-- Auréole décorative -->
+        <div class="halo-container">
+          <div class="halo"></div>
+          <div class="start-icon">&#9769;</div>
+        </div>
+        <h1 class="title-main">Catho Guesser</h1>
+        <p class="subtitle" data-i18n="subtitle">Montre au monde à quel point tu es un bon chrétien</p>
+
+        <div class="ornate-divider">
+          <span class="divider-wing">&#10087;</span>
+          <span class="divider-cross">&#10013;</span>
+          <span class="divider-wing">&#10087;</span>
+        </div>
+
+        <div class="start-rules">
+          <div class="rule">
+            <span class="rule-icon">&#9398;</span>
+            <span data-i18n="rule1">Devinez le <strong>pays</strong> <em>(+1 pt)</em></span>
+          </div>
+          <div class="rule">
+            <span class="rule-icon">&#9399;</span>
+            <span data-i18n="rule2">Devinez la <strong>ville</strong> <em>(+2 pts)</em></span>
+          </div>
+          <div class="rule">
+            <span class="rule-icon">&#9400;</span>
+            <span data-i18n="rule3">Devinez le <strong>nom</strong> <em>(+3 pts)</em></span>
+          </div>
+        </div>
+
+        <p class="start-note" data-i18n="start_note_jokers">Vous disposez de 3 prières afin d'obtenir des indices et vous rapprocher des cieux</p>
+        <p class="start-note" data-i18n="start_note">20 églises par manche</p>
+
+        <div class="start-buttons">
+          <button id="btn-start" class="btn-holy" data-i18n="btn_start">Commencer la Messe</button>
+          <button id="btn-leaderboard-home" class="btn-secondary" data-i18n="btn_leaderboard">&#127942; Classement</button>
+        </div>
+
+        <!-- Images kitsch décoratives -->
+        <img class="kitsch-img kitsch-madonna-rose" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/The_Madonna_of_the_Rose_LCCN2005696669.jpg/300px-The_Madonna_of_the_Rose_LCCN2005696669.jpg" alt="" aria-hidden="true">
+        <img class="kitsch-img kitsch-sacred-heart" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/SacredHeartBatoni.jpg/300px-SacredHeartBatoni.jpg" alt="" aria-hidden="true">
+        <img class="kitsch-img kitsch-madonna" src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Andachtsbild_11_Madonna.jpg/300px-Andachtsbild_11_Madonna.jpg" alt="" aria-hidden="true">
+        <img class="kitsch-img kitsch-angel-start" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Bernhard_Plockhorst_-_Schutzengel.jpg/250px-Bernhard_Plockhorst_-_Schutzengel.jpg" alt="" aria-hidden="true">
+      </div>
+    </div>
+
+    <!-- ===== ÉCRAN DE JEU ===== -->
+    <div id="screen-game" class="screen">
+      <!-- Image avec cadre doré -->
+      <div id="image-container">
+        <div class="golden-frame">
+          <img id="church-image" src="" alt="Église à deviner">
+          <div id="image-loader">
+            <div class="spinner">&#10013;</div>
+          </div>
+        </div>
+        <div id="round-badge"></div>
+      </div>
+
+      <!-- Jokers -->
+      <div id="jokers-bar">
+        <button class="joker-btn" id="joker-spirit" data-joker="spirit">
+          <span class="joker-icon">&#9764;</span>
+          <span class="joker-label" data-i18n="joker_spirit">Saint-Esprit</span>
+        </button>
+        <button class="joker-btn" id="joker-god" data-joker="god">
+          <span class="joker-icon">&#10014;</span>
+          <span class="joker-label" data-i18n="joker_god">Dieu</span>
+        </button>
+        <button class="joker-btn" id="joker-father" data-joker="father">
+          <span class="joker-icon">&#9775;</span>
+          <span class="joker-label" data-i18n="joker_father">Le Père</span>
+        </button>
+      </div>
+      <div id="hint-display" class="hidden"></div>
+
+      <!-- Zone de question -->
+      <div id="question-area">
+        <h2 id="question-text"></h2>
+
+        <div id="choices-container"></div>
+
+        <div id="text-input-container" class="hidden">
+          <input type="text" id="name-input" data-i18n-placeholder="name_placeholder" placeholder="Nom de l'église..." autocomplete="off">
+          <div class="input-buttons">
+            <button id="btn-submit-name" class="btn-holy" data-i18n="btn_submit">Valider</button>
+            <button id="btn-skip-name" class="btn-ghost" data-i18n="btn_skip">Passer</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Feedback overlay -->
+      <div id="feedback-overlay" class="hidden">
+        <div id="feedback-card">
+          <div id="feedback-icon"></div>
+          <p id="feedback-text"></p>
+          <p id="feedback-detail"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ÉCRAN FIN DE PARTIE ===== -->
+    <div id="screen-gameover" class="screen">
+      <div class="gameover-content">
+        <!-- Rayons divins -->
+        <div class="divine-rays" aria-hidden="true">
+          <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+          <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+          <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+          <div class="ray"></div><div class="ray"></div><div class="ray"></div>
+        </div>
+
+        <h1 class="gameover-title" data-i18n="gameover_title">Amen !</h1>
+        <p class="gameover-subtitle" data-i18n="gameover_subtitle">La messe est dite.</p>
+
+        <div id="final-stats"></div>
+
+        <div id="save-score-section">
+          <p class="save-label" data-i18n="save_label">&#9997; Inscrivez votre nom dans le livre sacré :</p>
+          <div class="save-form">
+            <input type="text" id="pseudo-input" data-i18n-placeholder="pseudo_placeholder" placeholder="Votre pseudo..." maxlength="20" autocomplete="off">
+            <button id="btn-save-score" class="btn-holy btn-small" data-i18n="btn_save">Sauvegarder</button>
+          </div>
+          <p id="save-feedback" class="hidden"></p>
+        </div>
+
+        <div class="gameover-buttons">
+          <button id="btn-restart" class="btn-holy" data-i18n="btn_restart">Nouvelle Messe</button>
+          <button id="btn-leaderboard" class="btn-secondary" data-i18n="btn_leaderboard">&#127942; Classement</button>
+        </div>
+
+        <!-- Images kitsch décoratives gameover -->
+        <img class="kitsch-img kitsch-guadalupe" src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Virgen_de_Guadalupe%2C_Virgen_de_la_Promesa.jpg/280px-Virgen_de_Guadalupe%2C_Virgen_de_la_Promesa.jpg" alt="" aria-hidden="true">
+        <img class="kitsch-img kitsch-sacre-coeur" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Sacre_Coeur_cor_Jesu-DSC_1455w.jpg/250px-Sacre_Coeur_cor_Jesu-DSC_1455w.jpg" alt="" aria-hidden="true">
+        <img class="kitsch-img kitsch-angel-end" src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Guardian_Angel_1900.jpg/250px-Guardian_Angel_1900.jpg" alt="" aria-hidden="true">
+      </div>
+    </div>
+
+    <!-- ===== ÉCRAN LEADERBOARD ===== -->
+    <div id="screen-leaderboard" class="screen">
+      <div class="leaderboard-content">
+        <h1 class="leaderboard-title" data-i18n="lb_title">&#128220; Le Livre Sacré</h1>
+        <p class="leaderboard-subtitle" data-i18n="lb_subtitle">Les plus grands fidèles</p>
+
+        <div class="ornate-divider">
+          <span class="divider-wing">&#10087;</span>
+          <span class="divider-cross">&#10013;</span>
+          <span class="divider-wing">&#10087;</span>
+        </div>
+
+        <div id="leaderboard-list"></div>
+
+        <div class="leaderboard-buttons">
+          <button id="btn-back-home" class="btn-secondary" data-i18n="btn_back">Retour</button>
+          <button id="btn-play-from-lb" class="btn-holy" data-i18n="btn_play">Jouer</button>
+        </div>
+        <button id="btn-clear-leaderboard" class="btn-ghost btn-danger" data-i18n="btn_clear_lb">Purger les hérétiques</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="ornate-divider small">
+      <span class="divider-wing">&#10087;</span>
+      <span class="divider-cross">&#10013;</span>
+      <span class="divider-wing">&#10087;</span>
+    </div>
+    <p data-i18n="footer">Images : Wikimedia Commons (CC BY-SA) &bull; Catho Guesser &bull; <em>In nomine Patris</em></p>
+  </footer>
+
+  <script src="churches.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

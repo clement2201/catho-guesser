@@ -12,6 +12,42 @@
   const LANG_KEY = 'catho_guesser_lang';
   const MAX_LEADERBOARD = 20;
 
+  // ==================== FIREBASE ====================
+  const firebaseConfig = {
+    apiKey: "AIzaSyD0H5t_IEKYjrdyh9J7UiR-JtqgKSvFYzA",
+    authDomain: "catho-guesser.firebaseapp.com",
+    databaseURL: "https://catho-guesser-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "catho-guesser",
+    storageBucket: "catho-guesser.firebasestorage.app",
+    messagingSenderId: "390464919609",
+    appId: "1:390464919609:web:40864cc5bde0d807ca55e8"
+  };
+
+  let firebaseDb = null;
+  let firebaseAvailable = false;
+
+  const withTimeout = (promise, ms) =>
+    Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase timeout')), ms))
+    ]);
+
+  try {
+    if (typeof firebase !== 'undefined') {
+      firebase.initializeApp(firebaseConfig);
+      firebaseDb = firebase.database();
+      // Tester la connexion réelle avec timeout (ne pas faire confiance à initializeApp)
+      withTimeout(firebaseDb.ref('/leaderboard').once('value'), 5000)
+        .then(() => { firebaseAvailable = true; })
+        .catch(() => {
+          firebaseAvailable = false;
+          console.warn('Firebase unreachable, using localStorage only');
+        });
+    }
+  } catch (e) {
+    console.warn('Firebase init failed, using localStorage fallback:', e);
+  }
+
   // ==================== TRADUCTIONS ====================
   let currentLang = 'fr';
 
@@ -705,7 +741,7 @@
   };
 
   // ==================== LEADERBOARD ====================
-  const getLeaderboard = () => {
+  const getLeaderboardLocal = () => {
     try {
       const data = localStorage.getItem(LEADERBOARD_KEY);
       return data ? JSON.parse(data) : [];
@@ -714,29 +750,75 @@
     }
   };
 
-  const saveLeaderboard = (entries) => {
+  const saveLeaderboardLocal = (entries) => {
     try {
       localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(entries));
-    } catch {
-      // localStorage indisponible
+    } catch {}
+  };
+
+  const getLeaderboard = () => {
+    return new Promise((resolve) => {
+      if (!firebaseAvailable) {
+        resolve(getLeaderboardLocal());
+        return;
+      }
+      firebaseDb.ref('/leaderboard').orderByChild('score').once('value')
+        .then((snapshot) => {
+          const entries = [];
+          snapshot.forEach((child) => {
+            entries.push({ id: child.key, ...child.val() });
+          });
+          entries.sort((a, b) => b.score - a.score);
+          resolve(entries);
+        })
+        .catch(() => {
+          resolve(getLeaderboardLocal());
+        });
+    });
+  };
+
+  const addToLeaderboard = async (pseudo, score) => {
+    const entry = {
+      pseudo,
+      score,
+      date: new Date().toLocaleDateString(currentLang === 'en' ? 'en-GB' : currentLang === 'es' ? 'es-ES' : 'fr-FR'),
+      timestamp: Date.now()
+    };
+
+    // TOUJOURS sauvegarder dans localStorage d'abord
+    let entries = getLeaderboardLocal();
+    entries.push(entry);
+    entries.sort((a, b) => b.score - a.score);
+    entries = entries.slice(0, MAX_LEADERBOARD);
+    saveLeaderboardLocal(entries);
+
+    // Aussi envoyer vers Firebase si disponible (avec timeout)
+    if (firebaseAvailable) {
+      try {
+        await withTimeout(firebaseDb.ref('/leaderboard').push(entry), 5000);
+        // Garder seulement les MAX_LEADERBOARD meilleurs scores
+        const snapshot = await withTimeout(
+          firebaseDb.ref('/leaderboard').orderByChild('score').once('value'), 5000
+        );
+        const all = [];
+        snapshot.forEach((child) => {
+          all.push({ id: child.key, score: child.val().score });
+        });
+        if (all.length > MAX_LEADERBOARD) {
+          const toRemove = all.slice(0, all.length - MAX_LEADERBOARD);
+          const updates = {};
+          toRemove.forEach((e) => { updates[e.id] = null; });
+          await withTimeout(firebaseDb.ref('/leaderboard').update(updates), 5000);
+        }
+      } catch (e) {
+        console.warn('Firebase write failed (localStorage OK):', e);
+      }
     }
   };
 
-  const addToLeaderboard = (pseudo, score) => {
-    let entries = getLeaderboard();
-    entries.push({
-      pseudo,
-      score,
-      date: new Date().toLocaleDateString(currentLang === 'en' ? 'en-GB' : currentLang === 'es' ? 'es-ES' : 'fr-FR')
-    });
-    entries.sort((a, b) => b.score - a.score);
-    entries = entries.slice(0, MAX_LEADERBOARD);
-    saveLeaderboard(entries);
-    return entries;
-  };
+  let firebaseLeaderboardListener = null;
 
-  const renderLeaderboard = () => {
-    const entries = getLeaderboard();
+  const renderLeaderboardEntries = (entries) => {
     const list = dom.leaderboardList;
     list.innerHTML = '';
 
@@ -759,7 +841,32 @@
     });
   };
 
-  const handleSaveScore = () => {
+  const renderLeaderboard = () => {
+    // Toujours afficher localStorage immédiatement
+    renderLeaderboardEntries(getLeaderboardLocal());
+
+    // Détacher l'ancien listener si existant
+    if (firebaseLeaderboardListener) {
+      firebaseDb.ref('/leaderboard').off('value', firebaseLeaderboardListener);
+      firebaseLeaderboardListener = null;
+    }
+
+    // Si Firebase est disponible, écouter les mises à jour en temps réel
+    if (firebaseAvailable) {
+      firebaseLeaderboardListener = firebaseDb.ref('/leaderboard').on('value', (snapshot) => {
+        const entries = [];
+        snapshot.forEach((child) => {
+          entries.push({ id: child.key, ...child.val() });
+        });
+        entries.sort((a, b) => b.score - a.score);
+        renderLeaderboardEntries(entries);
+      }, () => {
+        // Erreur Firebase → on garde les données localStorage déjà affichées
+      });
+    }
+  };
+
+  const handleSaveScore = async () => {
     let pseudo = dom.pseudoInput.value.trim();
     if (!pseudo) {
       dom.pseudoInput.focus();
@@ -767,20 +874,35 @@
     }
     if (pseudo.length > 20) pseudo = pseudo.substring(0, 20);
 
-    addToLeaderboard(pseudo, game.score);
-
-    dom.saveFeedback.textContent = t('score_saved');
-    dom.saveFeedback.className = 'success';
-    dom.saveFeedback.classList.remove('hidden');
     dom.btnSaveScore.disabled = true;
     dom.pseudoInput.disabled = true;
+
+    try {
+      await addToLeaderboard(pseudo, game.score);
+      dom.saveFeedback.textContent = t('score_saved');
+      dom.saveFeedback.className = 'success';
+      dom.saveFeedback.classList.remove('hidden');
+    } catch {
+      dom.btnSaveScore.disabled = false;
+      dom.pseudoInput.disabled = false;
+    }
   };
 
-  const handleClearLeaderboard = () => {
-    if (confirm(t('confirm_clear'))) {
-      saveLeaderboard([]);
-      renderLeaderboard();
+  const handleClearLeaderboard = async () => {
+    if (!confirm(t('confirm_clear'))) return;
+
+    // Toujours vider localStorage
+    saveLeaderboardLocal([]);
+
+    if (firebaseAvailable) {
+      try {
+        await withTimeout(firebaseDb.ref('/leaderboard').remove(), 5000);
+      } catch (e) {
+        console.warn('Firebase clear failed:', e);
+      }
     }
+
+    renderLeaderboard();
   };
 
   // ==================== JOKERS ====================

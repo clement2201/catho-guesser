@@ -36,13 +36,7 @@
     if (typeof firebase !== 'undefined') {
       firebase.initializeApp(firebaseConfig);
       firebaseDb = firebase.database();
-      // Tester la connexion réelle avec timeout (ne pas faire confiance à initializeApp)
-      withTimeout(firebaseDb.ref('/leaderboard').once('value'), 5000)
-        .then(() => { firebaseAvailable = true; })
-        .catch(() => {
-          firebaseAvailable = false;
-          console.warn('Firebase unreachable, using localStorage only');
-        });
+      firebaseAvailable = true;
     }
   } catch (e) {
     console.warn('Firebase init failed, using localStorage fallback:', e);

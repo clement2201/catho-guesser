@@ -1260,7 +1260,13 @@ footer em {
 /* ========== RESPONSIVE ========== */
 @media (min-width: 768px) {
   .golden-frame {
-    height: 50vh;
+    height: 60vh;
+    max-height: 550px;
+    background: var(--cream-dark);
+  }
+
+  #church-image {
+    object-fit: contain;
   }
 
   #choices-container {

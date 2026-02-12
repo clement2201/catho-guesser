@@ -10,7 +10,7 @@
   const FEEDBACK_DELAY_WRONG = 2000;
   const LEADERBOARD_KEY = 'catho_guesser_leaderboard';
   const LANG_KEY = 'catho_guesser_lang';
-  const MAX_LEADERBOARD = 20;
+  const MAX_LEADERBOARD = 200;
 
   // ==================== FIREBASE ====================
   const firebaseConfig = {

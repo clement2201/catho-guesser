@@ -670,22 +670,52 @@
   };
 
   // ==================== GUESS NAME ====================
+  const generateNameChoices = (church) => {
+    const correct = church.name;
+    const sameContinent = [];
+    const other = [];
+    const seen = new Set([correct]);
+
+    for (const c of CHURCHES) {
+      if (seen.has(c.name)) continue;
+      seen.add(c.name);
+      if (c.continent === church.continent) {
+        sameContinent.push(c.name);
+      } else {
+        other.push(c.name);
+      }
+    }
+
+    let distractors = shuffleArray(sameContinent).slice(0, 3);
+    if (distractors.length < 3) {
+      distractors = [...distractors, ...shuffleArray(other).slice(0, 3 - distractors.length)];
+    }
+
+    return shuffleArray([correct, ...distractors.slice(0, 3)]);
+  };
+
   const showGuessName = () => {
     game.state = 'guess_name';
     dom.questionText.textContent = t('question_name');
-    dom.choicesContainer.style.display = 'none';
+    dom.textInputContainer.classList.add('hidden');
+    dom.choicesContainer.style.display = '';
     dom.choicesContainer.innerHTML = '';
-    dom.textInputContainer.classList.remove('hidden');
-    dom.nameInput.placeholder = t('name_placeholder');
-    dom.nameInput.value = '';
-    dom.nameInput.focus();
+
+    const choices = generateNameChoices(game.currentChurch);
+    choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = choice;
+      btn.addEventListener('click', () => handleNameGuess(choice, btn));
+      dom.choicesContainer.appendChild(btn);
+    });
   };
 
-  const handleNameSubmit = () => {
-    const input = dom.nameInput.value.trim();
-    if (!input) return;
+  const handleNameGuess = (selected, clickedBtn) => {
+    const correct = selected === game.currentChurch.name;
+    disableChoices();
+    highlightChoices(game.currentChurch.name, correct ? null : clickedBtn);
 
-    const correct = checkNameMatch(input, game.currentChurch);
     if (correct) {
       game.score += POINTS_NAME;
       game._roundPoints += POINTS_NAME;
@@ -693,18 +723,12 @@
       game.maxStreak = Math.max(game.maxStreak, game.streak);
       game.perfectRounds += 1;
       updateStats();
-      showFeedback(true, t('bravo'), game.currentChurch.name, () => nextRound());
+      showFeedback(true, t('bravo'), t('plus_3'), () => nextRound());
     } else {
       game.streak = 0;
       updateStats();
       showFeedback(false, t('not_quite'), game.currentChurch.name, () => nextRound());
     }
-  };
-
-  const handleNameSkip = () => {
-    game.streak = 0;
-    updateStats();
-    showFeedback(false, t('skipped'), game.currentChurch.name, () => nextRound());
   };
 
   // ==================== FEEDBACK ====================

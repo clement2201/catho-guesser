@@ -20,11 +20,13 @@
     projectId: "catho-guesser",
     storageBucket: "catho-guesser.firebasestorage.app",
     messagingSenderId: "390464919609",
-    appId: "1:390464919609:web:40864cc5bde0d807ca55e8"
+    appId: "1:390464919609:web:40864cc5bde0d807ca55e8",
+    measurementId: "G-5TB648PN9D"
   };
 
   let firebaseDb = null;
   let firebaseAvailable = false;
+  let analytics = null;
 
   const withTimeout = (promise, ms) =>
     Promise.race([
@@ -32,11 +34,20 @@
       new Promise((_, reject) => setTimeout(() => reject(new Error('Firebase timeout')), ms))
     ]);
 
+  const logEvent = (name, params) => {
+    if (analytics) {
+      try { analytics.logEvent(name, params); } catch {}
+    }
+  };
+
   try {
     if (typeof firebase !== 'undefined') {
       firebase.initializeApp(firebaseConfig);
       firebaseDb = firebase.database();
       firebaseAvailable = true;
+      if (firebase.analytics) {
+        analytics = firebase.analytics();
+      }
     }
   } catch (e) {
     console.warn('Firebase init failed, using localStorage fallback:', e);
@@ -272,6 +283,7 @@
       btn.classList.toggle('active', btn.dataset.lang === lang);
     });
     applyTranslations();
+    logEvent('language_change', { language: lang });
   };
 
   // ==================== ÉTAT DU JEU ====================
@@ -568,6 +580,8 @@
     };
     map[name].classList.add('active');
 
+    logEvent('screen_view', { screen_name: name });
+
     const showHeader = name === 'game';
     dom.header.classList.toggle('hidden', !showHeader);
     document.getElementById('lang-selector').classList.toggle('hidden', showHeader);
@@ -593,6 +607,8 @@
     game.perfectRounds = 0;
     game.jokers = { spirit: false, god: false, father: false };
     resetJokersUI();
+
+    logEvent('game_start', { language: currentLang });
 
     updateStats();
     showScreen('game');
@@ -660,6 +676,8 @@
     disableChoices();
     highlightChoices(game.currentChurch.country, correct ? null : clickedBtn);
 
+    logEvent('answer_country', { correct, round: game.currentIndex + 1 });
+
     if (correct) {
       game.score += POINTS_COUNTRY;
       game._roundPoints += POINTS_COUNTRY;
@@ -668,6 +686,7 @@
     } else {
       game.streak = 0;
       updateStats();
+      logEvent('round_dropout', { round: game.currentIndex + 1, stage: 'country' });
       showFeedback(false, t('wrong'), `${t('was')}${game.currentChurch.country}`, () => nextRound());
     }
   };
@@ -707,6 +726,8 @@
     disableChoices();
     highlightChoices(game.currentChurch.city, correct ? null : clickedBtn);
 
+    logEvent('answer_city', { correct, round: game.currentIndex + 1 });
+
     if (correct) {
       game.score += POINTS_CITY;
       game._roundPoints += POINTS_CITY;
@@ -715,6 +736,7 @@
     } else {
       game.streak = 0;
       updateStats();
+      logEvent('round_dropout', { round: game.currentIndex + 1, stage: 'city' });
       showFeedback(false, t('wrong'), `${t('was')}${game.currentChurch.city}`, () => nextRound());
     }
   };
@@ -845,6 +867,8 @@
     disableChoices();
     highlightChoices(game.currentChurch.name, correct ? null : clickedBtn);
 
+    logEvent('answer_name', { correct, round: game.currentIndex + 1 });
+
     if (correct) {
       game.score += POINTS_NAME;
       game._roundPoints += POINTS_NAME;
@@ -893,6 +917,8 @@
     game.roundsPlayed += 1;
     game.currentIndex += 1;
 
+    logEvent('round_complete', { round: game.roundsPlayed, round_points: game._roundPoints, total_score: game.score });
+
     if (game.currentIndex >= game.churches.length) {
       showGameOver();
     } else {
@@ -908,6 +934,14 @@
     const percentage = Math.round((game.score / maxPossible) * 100);
 
     const rank = getRank(percentage);
+
+    logEvent('game_complete', {
+      score: game.score,
+      percentage,
+      rank: rank.key,
+      max_streak: game.maxStreak,
+      perfect_rounds: game.perfectRounds
+    });
 
     dom.finalStats.innerHTML =
       `<div class="rank-badge"><span class="rank-emoji">${rank.emoji}</span><span class="rank-title">${t(rank.key)}</span></div>` +
@@ -1094,6 +1128,7 @@
 
     try {
       await addToLeaderboard(pseudo, game.score);
+      logEvent('score_saved', { score: game.score, pseudo_length: pseudo.length });
       dom.saveFeedback.textContent = t('score_saved');
       dom.saveFeedback.className = 'success';
       dom.saveFeedback.classList.remove('hidden');
@@ -1143,6 +1178,8 @@
     if (game.jokers[type]) return;
     game.jokers[type] = true;
 
+    logEvent('joker_used', { joker: type, round: game.currentIndex + 1, stage: game.state });
+
     const answer = getAnswer();
 
     if (type === 'spirit') {
@@ -1188,6 +1225,8 @@
       btn.addEventListener('click', () => setLang(btn.dataset.lang));
     });
     applyTranslations();
+
+    logEvent('page_view', { language: currentLang });
 
     // Accueil
     dom.btnStart.addEventListener('click', startGame);

@@ -670,25 +670,60 @@
   };
 
   // ==================== GUESS NAME ====================
+  // Eglises/monuments religieux connus par ville pour les distracteurs
+  const CITY_CHURCHES = {
+    "Paris": ["Cathédrale Notre-Dame de Paris", "Basilique du Sacré-Cœur", "Église de la Madeleine", "Église Saint-Sulpice", "Sainte-Chapelle", "Église Saint-Eustache", "Église Saint-Germain-des-Prés", "Panthéon"],
+    "Le Mont-Saint-Michel": ["Mont-Saint-Michel", "Abbaye du Mont-Saint-Michel", "Église Saint-Pierre du Mont-Saint-Michel", "Chapelle Saint-Aubert"],
+    "Strasbourg": ["Cathédrale Notre-Dame de Strasbourg", "Église Saint-Thomas", "Église Saint-Paul", "Église Saint-Pierre-le-Jeune"],
+    "Vatican": ["Basilique Saint-Pierre", "Chapelle Sixtine", "Basilique Saint-Jean-de-Latran", "Basilique Sainte-Marie-Majeure"],
+    "Florence": ["Cathédrale de Florence", "Basilique Santa Croce", "Basilique San Lorenzo", "Église Santa Maria Novella", "Baptistère Saint-Jean"],
+    "Milan": ["Cathédrale de Milan", "Basilique Sant'Ambrogio", "Église Santa Maria delle Grazie", "Église San Maurizio"],
+    "Venise": ["Basilique Saint-Marc", "Église Santa Maria della Salute", "Basilique San Giorgio Maggiore", "Église des Frari"],
+    "Barcelone": ["Sagrada Família", "Cathédrale Sainte-Eulalie", "Église Santa Maria del Mar", "Basilique de la Mercè"],
+    "Séville": ["Cathédrale de Séville", "Église du Divin-Sauveur", "Basilique de la Macarena", "Église Santa Ana"],
+    "Londres": ["Abbaye de Westminster", "Cathédrale Saint-Paul", "Église du Temple", "Cathédrale de Southwark", "Brompton Oratory"],
+    "Cologne": ["Cathédrale de Cologne", "Église Sainte-Marie-du-Capitole", "Grande Église Saint-Martin", "Église des Saints-Apôtres"],
+    "Moscou": ["Cathédrale Saint-Basile", "Cathédrale du Christ-Sauveur", "Cathédrale de la Dormition", "Cathédrale de l'Archange-Saint-Michel"],
+    "Istanbul": ["Hagia Sophia", "Mosquée Bleue", "Église Saint-Sauveur-in-Chora", "Église Sainte-Irène"],
+    "Lærdal": ["Église en bois debout de Borgund", "Stavkirke d'Urnes", "Stavkirke de Lom", "Stavkirke de Heddal"],
+    "Reykjavik": ["Hallgrímskirkja", "Cathédrale du Christ-Roi", "Église libre de Reykjavik", "Église de Landakot"],
+    "Prague": ["Église Saint-Nicolas", "Cathédrale Saint-Guy", "Église Notre-Dame de Týn", "Église Saint-Jacques-le-Majeur"],
+    "New York": ["Cathédrale Saint-Patrick", "Cathédrale Saint-Jean le Divin", "Église de la Trinité", "Église Saint-Thomas"],
+    "Washington": ["Cathédrale nationale de Washington", "Basilique du Sanctuaire national", "Église Saint-Matthieu", "Église de l'Épiphanie"],
+    "Montréal": ["Basilique Notre-Dame de Montréal", "Oratoire Saint-Joseph", "Cathédrale Marie-Reine-du-Monde", "Église Saint-Patrick"],
+    "Mexico": ["Cathédrale métropolitaine de Mexico", "Basilique Notre-Dame de Guadalupe", "Temple de San Francisco", "Église de Santo Domingo"],
+    "Brasília": ["Cathédrale de Brasília", "Sanctuaire Dom Bosco", "Église Notre-Dame de Fátima", "Chapelle de la Légation"],
+    "Ipiales": ["Sanctuaire de Las Lajas", "Cathédrale d'Ipiales", "Église San Felipe Neri", "Chapelle de La Milagrosa"],
+    "Quito": ["Basilique du Vœu National", "Église de la Compañía", "Cathédrale de Quito", "Église San Francisco"],
+    "Cusco": ["Église de la Compagnie de Jésus", "Cathédrale de Cusco", "Église San Blas", "Église de la Merced"],
+    "Lalibela": ["Église Saint-Georges de Lalibela", "Église Bete Medhane Alem", "Église Bete Maryam", "Église Bete Amanuel"],
+    "Le Caire": ["Église suspendue du Caire", "Église Saints-Serge-et-Bacchus", "Cathédrale Saint-Marc", "Église Sainte-Barbara"],
+    "Yamoussoukro": ["Basilique Notre-Dame de la Paix", "Cathédrale Saint-Augustin", "Temple protestant de Yamoussoukro", "Mosquée de Yamoussoukro"],
+    "Casablanca": ["Cathédrale du Sacré-Cœur de Casablanca", "Église Notre-Dame de Lourdes", "Église du Saint-Rosaire", "Cathédrale Saint-Pierre"],
+    "Le Cap": ["Cathédrale Saint-Georges du Cap", "Église réformée hollandaise", "Cathédrale Sainte-Marie", "Église Saint-André"],
+    "Goa": ["Basilique de Bom Jesus", "Cathédrale Sé de Goa", "Église Saint-François-d'Assise", "Église Notre-Dame-du-Rosaire"],
+    "Manille": ["Église San Agustin de Manille", "Cathédrale de Manille", "Église de Quiapo", "Basilique San Sebastian"],
+    "Etchmiadzin": ["Cathédrale d'Etchmiadzin", "Église Sainte-Hripsimé", "Église Sainte-Gayané", "Église Choghakat"],
+    "Tbilissi": ["Cathédrale de la Sainte-Trinité de Tbilissi", "Basilique d'Antchiskhati", "Église Metekhi", "Cathédrale de Sion"],
+    "Nagasaki": ["Église d'Oura", "Cathédrale d'Urakami", "Église de Shitsu", "Église de Kashiragashima"],
+    "Beyrouth": ["Cathédrale Saint-Georges de Beyrouth", "Cathédrale Saint-Georges des Grecs", "Église Saint-Louis des Capucins", "Église Saint-Élie"],
+    "Sydney": ["Cathédrale Sainte-Marie de Sydney", "Cathédrale Saint-André", "Église Saint-Jacques", "Église Sainte-Marie de la Couronne"],
+    "Christchurch": ["Cathédrale ChristChurch", "Basilique de la Sainte-Trinité", "Église Saint-Michel", "Cathédrale du Saint-Sacrement"],
+    "Suva": ["Cathédrale du Sacré-Cœur de Suva", "Église Centenary Methodist", "Cathédrale Holy Trinity", "Église Saint-François-Xavier"]
+  };
+
   const generateNameChoices = (church) => {
     const correct = church.name;
-    const sameContinent = [];
-    const other = [];
-    const seen = new Set([correct]);
+    const cityChurches = (CITY_CHURCHES[church.city] || []).filter(c => c !== correct);
 
-    for (const c of CHURCHES) {
-      if (seen.has(c.name)) continue;
-      seen.add(c.name);
-      if (c.continent === church.continent) {
-        sameContinent.push(c.name);
-      } else {
-        other.push(c.name);
-      }
-    }
+    let distractors = shuffleArray(cityChurches).slice(0, 3);
 
-    let distractors = shuffleArray(sameContinent).slice(0, 3);
+    // Fallback si pas assez
     if (distractors.length < 3) {
-      distractors = [...distractors, ...shuffleArray(other).slice(0, 3 - distractors.length)];
+      const otherNames = CHURCHES
+        .filter(c => c.name !== correct && !distractors.includes(c.name))
+        .map(c => c.name);
+      distractors = [...distractors, ...shuffleArray(otherNames).slice(0, 3 - distractors.length)];
     }
 
     return shuffleArray([correct, ...distractors.slice(0, 3)]);

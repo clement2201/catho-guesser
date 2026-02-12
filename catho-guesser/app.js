@@ -424,29 +424,30 @@
 
   const generateCityChoices = (church) => {
     const correct = church.city;
+    const sameCountry = [];
     const sameContinent = [];
-    const otherContinent = [];
+    const other = [];
     const seen = new Set([correct]);
 
     for (const c of CHURCHES) {
       if (seen.has(c.city)) continue;
       seen.add(c.city);
-      if (c.continent === church.continent) {
+      if (c.country === church.country) {
+        sameCountry.push(c.city);
+      } else if (c.continent === church.continent) {
         sameContinent.push(c.city);
       } else {
-        otherContinent.push(c.city);
+        other.push(c.city);
       }
     }
 
-    let distractors = shuffleArray(sameContinent).slice(0, 2);
-    const needed = 3 - distractors.length;
-    if (needed > 0) {
-      distractors = [...distractors, ...shuffleArray(otherContinent).slice(0, needed)];
+    // Priorité : même pays > même continent > reste
+    let distractors = shuffleArray(sameCountry).slice(0, 3);
+    if (distractors.length < 3) {
+      distractors = [...distractors, ...shuffleArray(sameContinent).slice(0, 3 - distractors.length)];
     }
     if (distractors.length < 3) {
-      const remaining = shuffleArray([...sameContinent, ...otherContinent])
-        .filter(c => !distractors.includes(c));
-      distractors = [...distractors, ...remaining.slice(0, 3 - distractors.length)];
+      distractors = [...distractors, ...shuffleArray(other).slice(0, 3 - distractors.length)];
     }
 
     return shuffleArray([correct, ...distractors.slice(0, 3)]);
@@ -576,19 +577,25 @@
   const showGuessCity = () => {
     game.state = 'guess_city';
     dom.questionText.textContent = t('question_city');
-    dom.choicesContainer.style.display = 'none';
+    dom.textInputContainer.classList.add('hidden');
+    dom.choicesContainer.style.display = '';
     dom.choicesContainer.innerHTML = '';
-    dom.textInputContainer.classList.remove('hidden');
-    dom.nameInput.placeholder = t('city_placeholder');
-    dom.nameInput.value = '';
-    dom.nameInput.focus();
+
+    const choices = generateCityChoices(game.currentChurch);
+    choices.forEach(choice => {
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = choice;
+      btn.addEventListener('click', () => handleCityGuess(choice, btn));
+      dom.choicesContainer.appendChild(btn);
+    });
   };
 
-  const handleCitySubmit = () => {
-    const input = dom.nameInput.value.trim();
-    if (!input) return;
+  const handleCityGuess = (selected, clickedBtn) => {
+    const correct = selected === game.currentChurch.city;
+    disableChoices();
+    highlightChoices(game.currentChurch.city, correct ? null : clickedBtn);
 
-    const correct = checkCityMatch(input, game.currentChurch);
     if (correct) {
       game.score += POINTS_CITY;
       game._roundPoints += POINTS_CITY;
@@ -977,17 +984,10 @@
 
     // Jeu
     const handleTextSubmit = () => {
-      if (game.state === 'guess_city') handleCitySubmit();
-      else if (game.state === 'guess_name') handleNameSubmit();
+      if (game.state === 'guess_name') handleNameSubmit();
     };
     const handleTextSkip = () => {
-      if (game.state === 'guess_city') {
-        game.streak = 0;
-        updateStats();
-        showFeedback(false, t('skipped'), game.currentChurch.city, () => nextRound());
-      } else {
-        handleNameSkip();
-      }
+      handleNameSkip();
     };
     // Jokers
     dom.jokerSpirit.addEventListener('click', () => useJoker('spirit'));

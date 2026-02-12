@@ -518,10 +518,14 @@
   const audioLanding = new Audio('https://archive.org/download/GregorianChantMass/02Track2_vbr.mp3');
   audioLanding.loop = true;
   audioLanding.volume = 0.3;
+  audioLanding.preload = 'auto';
 
   const audioGameover = new Audio('https://archive.org/download/EDIS-SRP-0195-06/EDIS-SRP-0195-06.mp3');
   audioGameover.loop = false;
   audioGameover.volume = 0.4;
+  audioGameover.preload = 'auto';
+
+  let audioUnlocked = false;
 
   const stopAllMusic = () => {
     audioLanding.pause();
@@ -532,8 +536,24 @@
 
   const playMusic = (audio) => {
     stopAllMusic();
-    audio.play().catch(() => {});
+    if (audioUnlocked) {
+      audio.play().catch(() => {});
+    }
   };
+
+  // Débloquer l'audio au premier geste utilisateur
+  const unlockAudio = () => {
+    audioUnlocked = true;
+    // Jouer la musique de l'écran actuel
+    const startScreen = document.getElementById('screen-start');
+    if (startScreen && startScreen.classList.contains('active')) {
+      audioLanding.play().catch(() => {});
+    }
+    document.removeEventListener('pointerdown', unlockAudio);
+    document.removeEventListener('touchstart', unlockAudio);
+  };
+  document.addEventListener('pointerdown', unlockAudio);
+  document.addEventListener('touchstart', unlockAudio);
 
   // ==================== NAVIGATION ====================
   const showScreen = (name) => {
@@ -1210,12 +1230,6 @@
     dom.btnPlayFromLb.addEventListener('click', startGame);
     dom.btnClearLeaderboard.addEventListener('click', handleClearLeaderboard);
 
-    // Lancer la musique au premier clic (autoplay bloqué par les navigateurs)
-    const startLandingMusic = () => {
-      audioLanding.play().catch(() => {});
-      document.removeEventListener('click', startLandingMusic);
-    };
-    document.addEventListener('click', startLandingMusic);
   };
 
   document.addEventListener('DOMContentLoaded', init);

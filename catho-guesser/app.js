@@ -514,6 +514,27 @@
     return shuffleArray([correct, ...distractors.slice(0, 3)]);
   };
 
+  // ==================== MUSIQUE ====================
+  const audioLanding = new Audio('https://archive.org/download/GregorianChantMass/02Track2_vbr.mp3');
+  audioLanding.loop = true;
+  audioLanding.volume = 0.3;
+
+  const audioGameover = new Audio('https://archive.org/download/EDIS-SRP-0195-06/EDIS-SRP-0195-06.mp3');
+  audioGameover.loop = false;
+  audioGameover.volume = 0.4;
+
+  const stopAllMusic = () => {
+    audioLanding.pause();
+    audioLanding.currentTime = 0;
+    audioGameover.pause();
+    audioGameover.currentTime = 0;
+  };
+
+  const playMusic = (audio) => {
+    stopAllMusic();
+    audio.play().catch(() => {});
+  };
+
   // ==================== NAVIGATION ====================
   const showScreen = (name) => {
     const screens = [dom.screenStart, dom.screenGame, dom.screenGameover, dom.screenLeaderboard];
@@ -530,6 +551,15 @@
     const showHeader = name === 'game';
     dom.header.classList.toggle('hidden', !showHeader);
     document.getElementById('lang-selector').classList.toggle('hidden', showHeader);
+
+    // Musique
+    if (name === 'start') {
+      playMusic(audioLanding);
+    } else if (name === 'gameover') {
+      playMusic(audioGameover);
+    } else {
+      stopAllMusic();
+    }
   };
 
   // ==================== LOGIQUE DE JEU ====================
@@ -1179,6 +1209,13 @@
     dom.btnBackHome.addEventListener('click', () => showScreen('start'));
     dom.btnPlayFromLb.addEventListener('click', startGame);
     dom.btnClearLeaderboard.addEventListener('click', handleClearLeaderboard);
+
+    // Lancer la musique au premier clic (autoplay bloqué par les navigateurs)
+    const startLandingMusic = () => {
+      audioLanding.play().catch(() => {});
+      document.removeEventListener('click', startLandingMusic);
+    };
+    document.addEventListener('click', startLandingMusic);
   };
 
   document.addEventListener('DOMContentLoaded', init);

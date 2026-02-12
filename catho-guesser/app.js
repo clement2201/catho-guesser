@@ -383,19 +383,58 @@
     return dp[m][n];
   };
 
+  const GENERIC_WORDS = new Set([
+    'cathedrale', 'basilique', 'eglise', 'abbaye', 'sanctuaire', 'chapelle',
+    'cathedral', 'basilica', 'church', 'abbey', 'temple',
+    'de', 'du', 'des', 'la', 'le', 'les', 'l', 'en', 'a', 'au',
+    'of', 'the', 'di', 'del', 'da', 'das', 'do', 'dos',
+    'nationale', 'metropolitaine', 'national', 'metropolitan',
+    'sacre', 'saint', 'sainte', 'notre', 'dame', 'bois', 'debout'
+  ]);
+
+  const extractKeywords = (name) => {
+    const words = normalizeText(name).split(' ').filter(w => w.length >= 3 && !GENERIC_WORDS.has(w));
+    return words;
+  };
+
   const checkNameMatch = (userInput, church) => {
     const normalized = normalizeText(userInput);
-    if (normalized.length < 3) return false;
+    if (normalized.length < 2) return false;
 
     const candidates = [church.name, ...(church.nameAlt || [])];
+
     for (const candidate of candidates) {
       const c = normalizeText(candidate);
+      // Match exact
       if (normalized === c) return true;
-      if (c.includes(normalized) && normalized.length >= 5) return true;
-      if (normalized.includes(c) && c.length >= 5) return true;
-      const maxDist = Math.min(3, Math.floor(c.length * 0.3));
+      // Inclusion dans les deux sens
+      if (c.includes(normalized) && normalized.length >= 4) return true;
+      if (normalized.includes(c) && c.length >= 4) return true;
+      // Levenshtein plus tolerant (40% de la longueur, max 5)
+      const maxDist = Math.min(5, Math.floor(c.length * 0.4));
       if (levenshtein(normalized, c) <= maxDist) return true;
     }
+
+    // Verifier si l'input contient un mot-cle distinctif du nom
+    const keywords = extractKeywords(church.name);
+    for (const alt of (church.nameAlt || [])) {
+      extractKeywords(alt).forEach(k => { if (!keywords.includes(k)) keywords.push(k); });
+    }
+
+    for (const keyword of keywords) {
+      if (keyword.length < 4) continue;
+      // Le mot-cle est dans l'input (ou l'inverse)
+      if (normalized.includes(keyword)) return true;
+      if (keyword.includes(normalized) && normalized.length >= 4) return true;
+      // Levenshtein sur le mot-cle seul
+      const inputWords = normalized.split(' ');
+      for (const w of inputWords) {
+        if (w.length < 3) continue;
+        const dist = levenshtein(w, keyword);
+        if (dist <= Math.min(2, Math.floor(keyword.length * 0.35))) return true;
+      }
+    }
+
     return false;
   };
 

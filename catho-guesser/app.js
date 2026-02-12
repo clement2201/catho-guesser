@@ -712,17 +712,61 @@
     "Suva": ["Cathédrale du Sacré-Cœur de Suva", "Église Centenary Methodist", "Cathédrale Holy Trinity", "Église Saint-François-Xavier"]
   };
 
+  // Eglises connues par pays pour fallback quand pas assez dans la ville
+  const COUNTRY_CHURCHES = {
+    "France": ["Cathédrale Notre-Dame de Paris", "Basilique du Sacré-Cœur", "Mont-Saint-Michel", "Cathédrale Notre-Dame de Strasbourg", "Sainte-Chapelle", "Cathédrale de Chartres", "Basilique de Lourdes", "Cathédrale Notre-Dame de Reims", "Cathédrale d'Amiens", "Basilique de Vézelay", "Abbaye de Fontenay", "Cathédrale Notre-Dame de Rouen", "Église de la Madeleine", "Basilique Notre-Dame de Fourvière", "Cathédrale Saint-André de Bordeaux"],
+    "Italie": ["Basilique Saint-Pierre", "Cathédrale de Florence", "Cathédrale de Milan", "Basilique Saint-Marc", "Basilique Santa Croce", "Chapelle Sixtine", "Basilique San Giovanni in Laterano", "Basilique Sainte-Marie-Majeure", "Cathédrale de Sienne", "Basilique Saint-François d'Assise", "Cathédrale de Palerme", "Basilique San Vitale de Ravenne"],
+    "Espagne": ["Sagrada Família", "Cathédrale de Séville", "Cathédrale de Tolède", "Cathédrale de Saint-Jacques-de-Compostelle", "Cathédrale de Burgos", "Mosquée-Cathédrale de Cordoue", "Cathédrale de Grenade", "Basilique du Pilar de Saragosse", "Cathédrale de Salamanque", "Cathédrale Sainte-Eulalie de Barcelone"],
+    "Royaume-Uni": ["Abbaye de Westminster", "Cathédrale Saint-Paul", "Cathédrale de Canterbury", "Cathédrale de York", "Cathédrale de Durham", "Cathédrale de Winchester", "Cathédrale de Salisbury", "Cathédrale de Lincoln", "Cathédrale de Liverpool"],
+    "Allemagne": ["Cathédrale de Cologne", "Cathédrale d'Aix-la-Chapelle", "Cathédrale de Berlin", "Frauenkirche de Dresde", "Frauenkirche de Munich", "Cathédrale de Trèves", "Cathédrale de Spire", "Cathédrale de Worms"],
+    "Russie": ["Cathédrale Saint-Basile", "Cathédrale du Christ-Sauveur", "Cathédrale Saint-Isaac", "Cathédrale de la Dormition", "Église du Sauveur-sur-le-Sang-Versé", "Cathédrale Notre-Dame de Kazan", "Cathédrale de l'Archange-Saint-Michel"],
+    "Turquie": ["Hagia Sophia", "Église Saint-Sauveur-in-Chora", "Église Sainte-Irène", "Cathédrale d'Ani", "Église des Quarante Martyrs"],
+    "Norvège": ["Église en bois debout de Borgund", "Stavkirke d'Urnes", "Cathédrale de Nidaros", "Stavkirke de Heddal", "Stavkirke de Lom", "Cathédrale d'Oslo"],
+    "Islande": ["Hallgrímskirkja", "Cathédrale du Christ-Roi", "Église de Landakot", "Église de Blönduós", "Skálholt"],
+    "Tchéquie": ["Église Saint-Nicolas", "Cathédrale Saint-Guy", "Église Notre-Dame de Týn", "Église Saint-Jacques de Kutná Hora", "Ossuaire de Sedlec", "Basilique Saint-Pierre de Brno"],
+    "États-Unis": ["Cathédrale Saint-Patrick", "Cathédrale nationale de Washington", "Cathédrale Saint-Jean le Divin", "Basilique du Sanctuaire national", "Église de la Trinité", "Cathédrale de San Fernando"],
+    "Canada": ["Basilique Notre-Dame de Montréal", "Oratoire Saint-Joseph", "Cathédrale Marie-Reine-du-Monde", "Basilique-Cathédrale Notre-Dame de Québec", "Basilique Sainte-Anne-de-Beaupré"],
+    "Mexique": ["Cathédrale métropolitaine de Mexico", "Basilique Notre-Dame de Guadalupe", "Cathédrale de Puebla", "Cathédrale de Oaxaca", "Cathédrale de Morelia", "Temple de Santo Domingo de Oaxaca"],
+    "Brésil": ["Cathédrale de Brasília", "Cathédrale métropolitaine de Rio", "Église São Francisco de Salvador", "Basilique Notre-Dame d'Aparecida", "Cathédrale de São Paulo"],
+    "Colombie": ["Sanctuaire de Las Lajas", "Cathédrale de Bogota", "Cathédrale de sel de Zipaquirá", "Cathédrale de Carthagène", "Église San Pedro Claver"],
+    "Équateur": ["Basilique du Vœu National", "Église de la Compañía de Quito", "Cathédrale de Cuenca", "Église San Francisco de Quito"],
+    "Pérou": ["Église de la Compagnie de Jésus", "Cathédrale de Cusco", "Cathédrale de Lima", "Couvent de Santo Domingo", "Église de la Merced"],
+    "Éthiopie": ["Église Saint-Georges de Lalibela", "Église Bete Medhane Alem", "Église de la Sainte-Trinité d'Addis-Abeba", "Cathédrale Saint-Georges d'Addis-Abeba", "Église Bete Maryam"],
+    "Égypte": ["Église suspendue du Caire", "Cathédrale Saint-Marc du Caire", "Monastère Sainte-Catherine", "Église Saints-Serge-et-Bacchus", "Cathédrale de la Nativité"],
+    "Côte d'Ivoire": ["Basilique Notre-Dame de la Paix", "Cathédrale Saint-Paul d'Abidjan", "Cathédrale Saint-Augustin", "Église Sainte-Thérèse de Treichville"],
+    "Maroc": ["Cathédrale du Sacré-Cœur de Casablanca", "Église Notre-Dame de Lourdes", "Cathédrale Saint-Pierre de Rabat", "Église du Sacré-Cœur de Tanger"],
+    "Afrique du Sud": ["Cathédrale Saint-Georges du Cap", "Cathédrale Sainte-Marie de Johannesbourg", "Église réformée hollandaise de Stellenbosch", "Cathédrale Emmanuel de Durban"],
+    "Inde": ["Basilique de Bom Jesus", "Cathédrale Sé de Goa", "Basilique San Thome de Chennai", "Cathédrale Sainte-Philomène de Mysore", "Basilique de Velankanni"],
+    "Philippines": ["Église San Agustin de Manille", "Cathédrale de Manille", "Basilique San Sebastian", "Église de Paoay", "Basilique du Santo Niño de Cebu"],
+    "Arménie": ["Cathédrale d'Etchmiadzin", "Monastère de Geghard", "Monastère de Khor Virap", "Monastère de Tatev", "Église Sainte-Hripsimé"],
+    "Géorgie": ["Cathédrale de la Sainte-Trinité de Tbilissi", "Cathédrale de Svetitskhoveli", "Monastère de Djvari", "Cathédrale de Bagrati", "Église Metekhi"],
+    "Japon": ["Église d'Oura", "Cathédrale d'Urakami", "Cathédrale Sainte-Marie de Tokyo", "Église de Shitsu", "Cathédrale du Sacré-Cœur d'Osaka"],
+    "Liban": ["Cathédrale Saint-Georges de Beyrouth", "Notre-Dame du Liban", "Cathédrale Saint-Paul de Harissa", "Basilique Saint-Étienne de Byblos", "Cathédrale Saint-Élie"],
+    "Australie": ["Cathédrale Sainte-Marie de Sydney", "Cathédrale Saint-Patrick de Melbourne", "Cathédrale Saint-André de Sydney", "Cathédrale Sainte-Marie de Perth"],
+    "Nouvelle-Zélande": ["Cathédrale ChristChurch", "Cathédrale du Saint-Sacrement", "Cathédrale Saint-Patrick de Auckland", "Basilique de la Sainte-Trinité"],
+    "Fidji": ["Cathédrale du Sacré-Cœur de Suva", "Cathédrale Holy Trinity", "Église Saint-François-Xavier", "Église Centenary Methodist"]
+  };
+
   const generateNameChoices = (church) => {
     const correct = church.name;
-    const cityChurches = (CITY_CHURCHES[church.city] || []).filter(c => c !== correct);
+    const seen = new Set([correct]);
 
+    // 1. Eglises de la meme ville
+    const cityChurches = (CITY_CHURCHES[church.city] || []).filter(c => !seen.has(c));
     let distractors = shuffleArray(cityChurches).slice(0, 3);
+    distractors.forEach(d => seen.add(d));
 
-    // Fallback si pas assez
+    // 2. Fallback : eglises du meme pays
     if (distractors.length < 3) {
-      const otherNames = CHURCHES
-        .filter(c => c.name !== correct && !distractors.includes(c.name))
-        .map(c => c.name);
+      const countryChurches = (COUNTRY_CHURCHES[church.country] || []).filter(c => !seen.has(c));
+      const extra = shuffleArray(countryChurches).slice(0, 3 - distractors.length);
+      distractors = [...distractors, ...extra];
+      extra.forEach(d => seen.add(d));
+    }
+
+    // 3. Dernier fallback : autres eglises du dataset
+    if (distractors.length < 3) {
+      const otherNames = CHURCHES.map(c => c.name).filter(c => !seen.has(c));
       distractors = [...distractors, ...shuffleArray(otherNames).slice(0, 3 - distractors.length)];
     }
 

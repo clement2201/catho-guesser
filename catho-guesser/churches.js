@@ -10,6 +10,7 @@ var CHURCHES = [
     city: "Paris",
     country: "France",
     continent: "Europe",
+    yearBuilt: 1163,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Notre-Dame_de_Paris%2C_4_October_2017.jpg/800px-Notre-Dame_de_Paris%2C_4_October_2017.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -20,6 +21,7 @@ var CHURCHES = [
     city: "Paris",
     country: "France",
     continent: "Europe",
+    yearBuilt: 1875,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c5/Le_sacre_coeur.jpg/800px-Le_sacre_coeur.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -30,6 +32,7 @@ var CHURCHES = [
     city: "Le Mont-Saint-Michel",
     country: "France",
     continent: "Europe",
+    yearBuilt: 966,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Mont-Saint-Michel_vu_du_ciel.jpg/800px-Mont-Saint-Michel_vu_du_ciel.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -40,6 +43,7 @@ var CHURCHES = [
     city: "Strasbourg",
     country: "France",
     continent: "Europe",
+    yearBuilt: 1015,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7e/Strasbourg_Cathedral_Exterior_-_Diliff.jpg/800px-Strasbourg_Cathedral_Exterior_-_Diliff.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -50,6 +54,7 @@ var CHURCHES = [
     city: "Vatican",
     country: "Italie",
     continent: "Europe",
+    yearBuilt: 1506,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f5/Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg/800px-Basilica_di_San_Pietro_in_Vaticano_September_2015-1a.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -60,6 +65,7 @@ var CHURCHES = [
     city: "Florence",
     country: "Italie",
     continent: "Europe",
+    yearBuilt: 1296,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c7/Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg/800px-Cattedrale_di_Santa_Maria_del_Fiore_%E2%80%93_Il_Duomo_di_Firenze.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -70,6 +76,7 @@ var CHURCHES = [
     city: "Milan",
     country: "Italie",
     continent: "Europe",
+    yearBuilt: 1386,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/70/Milan_Cathedral_from_Piazza_del_Duomo.jpg/800px-Milan_Cathedral_from_Piazza_del_Duomo.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -80,6 +87,7 @@ var CHURCHES = [
     city: "Venise",
     country: "Italie",
     continent: "Europe",
+    yearBuilt: 1063,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/61/Venezia_Basilica_di_San_Marco_Fassade_2.jpg/800px-Venezia_Basilica_di_San_Marco_Fassade_2.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -90,6 +98,7 @@ var CHURCHES = [
     city: "Barcelone",
     country: "Espagne",
     continent: "Europe",
+    yearBuilt: 1882,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/26/%CE%A3%CE%B1%CE%B3%CF%81%CE%AC%CE%B4%CE%B1_%CE%A6%CE%B1%CE%BC%CE%AF%CE%BB%CE%B9%CE%B1_2941.jpg/800px-%CE%A3%CE%B1%CE%B3%CF%81%CE%AC%CE%B4%CE%B1_%CE%A6%CE%B1%CE%BC%CE%AF%CE%BB%CE%B9%CE%B1_2941.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -100,6 +109,7 @@ var CHURCHES = [
     city: "Séville",
     country: "Espagne",
     continent: "Europe",
+    yearBuilt: 1401,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2b/Sevilla_Cathedral_-_Southeast.jpg/800px-Sevilla_Cathedral_-_Southeast.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -110,6 +120,7 @@ var CHURCHES = [
     city: "Londres",
     country: "Royaume-Uni",
     continent: "Europe",
+    yearBuilt: 1245,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Westminster_Abbey_St_Peter.jpg/800px-Westminster_Abbey_St_Peter.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -120,6 +131,7 @@ var CHURCHES = [
     city: "Londres",
     country: "Royaume-Uni",
     continent: "Europe",
+    yearBuilt: 1675,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/St_Pauls_aerial_%28cropped%29.jpg/800px-St_Pauls_aerial_%28cropped%29.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -130,6 +142,7 @@ var CHURCHES = [
     city: "Cologne",
     country: "Allemagne",
     continent: "Europe",
+    yearBuilt: 1248,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/K%C3%B6lner_Dom_-_Westfassade_2022_ohne_Ger%C3%BCst-0968_b.jpg/800px-K%C3%B6lner_Dom_-_Westfassade_2022_ohne_Ger%C3%BCst-0968_b.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -140,6 +153,7 @@ var CHURCHES = [
     city: "Moscou",
     country: "Russie",
     continent: "Europe",
+    yearBuilt: 1555,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/Saint_Basil%27s_Cathedral_in_Moscow.jpg/800px-Saint_Basil%27s_Cathedral_in_Moscow.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -150,6 +164,7 @@ var CHURCHES = [
     city: "Istanbul",
     country: "Turquie",
     continent: "Europe",
+    yearBuilt: 532,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4a/Hagia_Sophia_%28228968325%29.jpeg/800px-Hagia_Sophia_%28228968325%29.jpeg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -160,6 +175,7 @@ var CHURCHES = [
     city: "Lærdal",
     country: "Norvège",
     continent: "Europe",
+    yearBuilt: 1180,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Borgund_Stave_Church_in_L%C3%A6rdalen%2C_2013_June.jpg/800px-Borgund_Stave_Church_in_L%C3%A6rdalen%2C_2013_June.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -170,6 +186,7 @@ var CHURCHES = [
     city: "Reykjavik",
     country: "Islande",
     continent: "Europe",
+    yearBuilt: 1945,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/Leifur_Eir%C3%ADksson_and_Hallgr%C3%ADmskirkja_%2814527191932%29.jpg/800px-Leifur_Eir%C3%ADksson_and_Hallgr%C3%ADmskirkja_%2814527191932%29.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -180,6 +197,7 @@ var CHURCHES = [
     city: "Prague",
     country: "Tchéquie",
     continent: "Europe",
+    yearBuilt: 1703,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f7/Praag%2C_Tsjechi%C3%AB_Aug_17%2C_2019_05-12-38_PM.jpeg/800px-Praag%2C_Tsjechi%C3%AB_Aug_17%2C_2019_05-12-38_PM.jpeg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -192,6 +210,7 @@ var CHURCHES = [
     city: "New York",
     country: "États-Unis",
     continent: "Amérique",
+    yearBuilt: 1858,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/At_New_York%2C_USA_2017_119.jpg/800px-At_New_York%2C_USA_2017_119.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -202,6 +221,7 @@ var CHURCHES = [
     city: "Washington",
     country: "États-Unis",
     continent: "Amérique",
+    yearBuilt: 1907,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/WashNatCathedralx1.jpg/800px-WashNatCathedralx1.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -212,6 +232,7 @@ var CHURCHES = [
     city: "Montréal",
     country: "Canada",
     continent: "Amérique",
+    yearBuilt: 1824,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Bas%C3%ADlica_de_Notre-Dame%2C_Montreal%2C_Canad%C3%A1%2C_2017-08-11%2C_DD_26-28_HDR.jpg/800px-Bas%C3%ADlica_de_Notre-Dame%2C_Montreal%2C_Canad%C3%A1%2C_2017-08-11%2C_DD_26-28_HDR.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -222,6 +243,7 @@ var CHURCHES = [
     city: "Mexico",
     country: "Mexique",
     continent: "Amérique",
+    yearBuilt: 1573,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Mexico_City_%282018%29_-_160.jpg/800px-Mexico_City_%282018%29_-_160.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -232,6 +254,7 @@ var CHURCHES = [
     city: "Brasília",
     country: "Brésil",
     continent: "Amérique",
+    yearBuilt: 1958,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Catedral_Metropolitana_de_Brasilia.jpg/800px-Catedral_Metropolitana_de_Brasilia.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -242,6 +265,7 @@ var CHURCHES = [
     city: "Ipiales",
     country: "Colombie",
     continent: "Amérique",
+    yearBuilt: 1916,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Santuario_de_Las_Lajas%2C_Ipiales%2C_Colombia%2C_2015-07-21%2C_DD_26-27_HDR.JPG/800px-Santuario_de_Las_Lajas%2C_Ipiales%2C_Colombia%2C_2015-07-21%2C_DD_26-27_HDR.JPG",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -252,6 +276,7 @@ var CHURCHES = [
     city: "Quito",
     country: "Équateur",
     continent: "Amérique",
+    yearBuilt: 1892,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/El_Voto_Nacional_._Quito%2C_Ecuador.JPG/800px-El_Voto_Nacional_._Quito%2C_Ecuador.JPG",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -262,6 +287,7 @@ var CHURCHES = [
     city: "Cusco",
     country: "Pérou",
     continent: "Amérique",
+    yearBuilt: 1571,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c0/Iglesia_de_la_Compa%C3%B1%C3%ADa_de_Jes%C3%BAs%2C_Plaza_de_Armas%2C_Cusco%2C_Per%C3%BA%2C_2015-07-31%2C_DD_51.JPG/800px-Iglesia_de_la_Compa%C3%B1%C3%ADa_de_Jes%C3%BAs%2C_Plaza_de_Armas%2C_Cusco%2C_Per%C3%BA%2C_2015-07-31%2C_DD_51.JPG",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -274,6 +300,7 @@ var CHURCHES = [
     city: "Lalibela",
     country: "Éthiopie",
     continent: "Afrique",
+    yearBuilt: 1200,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Lalibela%2C_san_giorgio%2C_esterno_24.jpg/800px-Lalibela%2C_san_giorgio%2C_esterno_24.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -284,6 +311,7 @@ var CHURCHES = [
     city: "Le Caire",
     country: "Égypte",
     continent: "Afrique",
+    yearBuilt: 690,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Kairo_Hanging_Church_BW_1.jpg/800px-Kairo_Hanging_Church_BW_1.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -294,6 +322,7 @@ var CHURCHES = [
     city: "Yamoussoukro",
     country: "Côte d'Ivoire",
     continent: "Afrique",
+    yearBuilt: 1985,
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/0/02/Notre_dame_de_la_paix_yamoussoukro_by_felix_krohn.jpg/800px-Notre_dame_de_la_paix_yamoussoukro_by_felix_krohn.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -304,6 +333,7 @@ var CHURCHES = [
     city: "Casablanca",
     country: "Maroc",
     continent: "Afrique",
+    yearBuilt: 1930,
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/f/f1/Cath%C3%A9drale_Casablanca.jpg/800px-Cath%C3%A9drale_Casablanca.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -314,6 +344,7 @@ var CHURCHES = [
     city: "Le Cap",
     country: "Afrique du Sud",
     continent: "Afrique",
+    yearBuilt: 1897,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/St_George%27s_Cathedral%2C_Wale_Street%2C_Cape_Town.jpg/800px-St_George%27s_Cathedral%2C_Wale_Street%2C_Cape_Town.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -326,6 +357,7 @@ var CHURCHES = [
     city: "Goa",
     country: "Inde",
     continent: "Asie",
+    yearBuilt: 1594,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Front_Elevation_of_Basilica_of_Bom_Jesus.jpg/800px-Front_Elevation_of_Basilica_of_Bom_Jesus.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -336,6 +368,7 @@ var CHURCHES = [
     city: "Manille",
     country: "Philippines",
     continent: "Asie",
+    yearBuilt: 1587,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/San_Agustin_Church_2024-05-19.jpg/800px-San_Agustin_Church_2024-05-19.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -346,6 +379,7 @@ var CHURCHES = [
     city: "Etchmiadzin",
     country: "Arménie",
     continent: "Asie",
+    yearBuilt: 301,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Etchmiadzin_2025-3.jpg/800px-Etchmiadzin_2025-3.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -356,6 +390,7 @@ var CHURCHES = [
     city: "Tbilissi",
     country: "Géorgie",
     continent: "Asie",
+    yearBuilt: 1995,
     imageUrl: "https://upload.wikimedia.org/wikipedia/en/thumb/0/04/2014_Tbilisi%2C_Sob%C3%B3r_Tr%C3%B3jcy_%C5%9Awi%C4%99tej_%2817%29.jpg/800px-2014_Tbilisi%2C_Sob%C3%B3r_Tr%C3%B3jcy_%C5%9Awi%C4%99tej_%2817%29.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -366,6 +401,7 @@ var CHURCHES = [
     city: "Nagasaki",
     country: "Japon",
     continent: "Asie",
+    yearBuilt: 1864,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/Oura_Cathedral_20180623.jpg/800px-Oura_Cathedral_20180623.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -376,6 +412,7 @@ var CHURCHES = [
     city: "Beyrouth",
     country: "Liban",
     continent: "Asie",
+    yearBuilt: 1884,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d9/Saint_George_Maronite_Cathedral_and_Mohammad_Al-Amin_Mosque_by_Lebnen18.jpg/800px-Saint_George_Maronite_Cathedral_and_Mohammad_Al-Amin_Mosque_by_Lebnen18.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   },
@@ -388,6 +425,7 @@ var CHURCHES = [
     city: "Sydney",
     country: "Australie",
     continent: "Océanie",
+    yearBuilt: 1866,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/St_Mary%27s_Cathedral%2C_Sydney_HDR_b.jpg/800px-St_Mary%27s_Cathedral%2C_Sydney_HDR_b.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -398,6 +436,7 @@ var CHURCHES = [
     city: "Christchurch",
     country: "Nouvelle-Zélande",
     continent: "Océanie",
+    yearBuilt: 1864,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/79/Christ_ChurchCathedral1_gobeirne.jpg/800px-Christ_ChurchCathedral1_gobeirne.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 3.0"
   },
@@ -408,6 +447,7 @@ var CHURCHES = [
     city: "Suva",
     country: "Fidji",
     continent: "Océanie",
+    yearBuilt: 1902,
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Sacred_Heart_Cathedral%2C_Suva_Fiji_July_2014.jpg/800px-Sacred_Heart_Cathedral%2C_Suva_Fiji_July_2014.jpg",
     attribution: "Wikimedia Commons, CC BY-SA 4.0"
   }

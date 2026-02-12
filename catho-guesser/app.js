@@ -422,32 +422,54 @@
     return shuffleArray([correct, ...distractors]);
   };
 
+  // Villes connues par pays pour les distracteurs QCM
+  const COUNTRY_CITIES = {
+    "France": ["Paris", "Lyon", "Marseille", "Toulouse", "Bordeaux", "Strasbourg", "Nantes", "Lille", "Nice", "Rouen", "Reims", "Le Mont-Saint-Michel", "Chartres", "Lourdes", "Avignon"],
+    "Italie": ["Rome", "Vatican", "Florence", "Milan", "Venise", "Naples", "Turin", "Bologne", "Palerme", "Assise", "Sienne", "Bari", "Gênes", "Padoue"],
+    "Espagne": ["Madrid", "Barcelone", "Séville", "Valence", "Tolède", "Grenade", "Bilbao", "Saragosse", "Cordoue", "Saint-Jacques-de-Compostelle", "Salamanque"],
+    "Royaume-Uni": ["Londres", "Canterbury", "York", "Édimbourg", "Liverpool", "Oxford", "Cambridge", "Bristol", "Manchester", "Durham", "Winchester"],
+    "Allemagne": ["Berlin", "Munich", "Cologne", "Hambourg", "Francfort", "Dresde", "Aix-la-Chapelle", "Nuremberg", "Stuttgart", "Trèves"],
+    "Russie": ["Moscou", "Saint-Pétersbourg", "Kazan", "Novgorod", "Volgograd", "Ekaterinbourg", "Sotchi", "Vladivostok"],
+    "Turquie": ["Istanbul", "Ankara", "Izmir", "Antalya", "Éphèse", "Cappadoce", "Trabzon", "Konya"],
+    "Norvège": ["Oslo", "Bergen", "Trondheim", "Stavanger", "Tromsø", "Lærdal", "Ålesund"],
+    "Islande": ["Reykjavik", "Akureyri", "Vik", "Húsavík", "Selfoss", "Keflavík"],
+    "Tchéquie": ["Prague", "Brno", "Ostrava", "Plzeň", "Český Krumlov", "Olomouc", "Kutná Hora"],
+    "États-Unis": ["New York", "Washington", "Los Angeles", "Chicago", "Boston", "San Francisco", "Philadelphie", "La Nouvelle-Orléans", "Baltimore", "Saint-Louis"],
+    "Canada": ["Montréal", "Québec", "Toronto", "Ottawa", "Vancouver", "Winnipeg", "Halifax", "Calgary"],
+    "Mexique": ["Mexico", "Guadalajara", "Puebla", "Oaxaca", "Monterrey", "Mérida", "San Cristóbal", "Guanajuato"],
+    "Brésil": ["Brasília", "São Paulo", "Rio de Janeiro", "Salvador", "Belo Horizonte", "Recife", "Fortaleza", "Manaus"],
+    "Colombie": ["Bogota", "Medellín", "Cali", "Carthagène", "Barranquilla", "Ipiales", "Santa Marta"],
+    "Équateur": ["Quito", "Guayaquil", "Cuenca", "Loja", "Ambato", "Riobamba"],
+    "Pérou": ["Lima", "Cusco", "Arequipa", "Trujillo", "Ayacucho", "Puno", "Huancayo"],
+    "Éthiopie": ["Addis-Abeba", "Lalibela", "Gondar", "Axoum", "Harar", "Dire Dawa"],
+    "Égypte": ["Le Caire", "Alexandrie", "Louxor", "Assouan", "Port-Saïd", "Gizeh"],
+    "Côte d'Ivoire": ["Abidjan", "Yamoussoukro", "Bouaké", "San-Pédro", "Daloa", "Korhogo"],
+    "Maroc": ["Casablanca", "Rabat", "Marrakech", "Fès", "Tanger", "Meknès", "Agadir"],
+    "Afrique du Sud": ["Le Cap", "Johannesbourg", "Pretoria", "Durban", "Port Elizabeth", "Bloemfontein"],
+    "Inde": ["Goa", "Mumbai", "Delhi", "Chennai", "Kolkata", "Bangalore", "Pondichéry", "Kochi"],
+    "Philippines": ["Manille", "Cebu", "Davao", "Zamboanga", "Iloilo", "Baguio", "Vigan"],
+    "Arménie": ["Erevan", "Etchmiadzin", "Gyumri", "Vanadzor", "Goris", "Dilijan"],
+    "Géorgie": ["Tbilissi", "Batoumi", "Kutaïssi", "Mtskheta", "Gori", "Telavi"],
+    "Japon": ["Tokyo", "Kyoto", "Nagasaki", "Osaka", "Hiroshima", "Nara", "Yokohama", "Kobe"],
+    "Liban": ["Beyrouth", "Tripoli", "Byblos", "Sidon", "Jounieh", "Baalbek", "Tyr"],
+    "Australie": ["Sydney", "Melbourne", "Brisbane", "Perth", "Adélaïde", "Canberra", "Darwin"],
+    "Nouvelle-Zélande": ["Auckland", "Wellington", "Christchurch", "Dunedin", "Hamilton", "Queenstown"],
+    "Fidji": ["Suva", "Nadi", "Lautoka", "Labasa", "Savusavu", "Levuka"]
+  };
+
   const generateCityChoices = (church) => {
     const correct = church.city;
-    const sameCountry = [];
-    const sameContinent = [];
-    const other = [];
-    const seen = new Set([correct]);
+    const countryCities = (COUNTRY_CITIES[church.country] || []).filter(c => c !== correct);
 
-    for (const c of CHURCHES) {
-      if (seen.has(c.city)) continue;
-      seen.add(c.city);
-      if (c.country === church.country) {
-        sameCountry.push(c.city);
-      } else if (c.continent === church.continent) {
-        sameContinent.push(c.city);
-      } else {
-        other.push(c.city);
-      }
-    }
+    let distractors = shuffleArray(countryCities).slice(0, 3);
 
-    // Priorité : même pays > même continent > reste
-    let distractors = shuffleArray(sameCountry).slice(0, 3);
+    // Fallback si pas assez de villes pour ce pays (ne devrait pas arriver)
     if (distractors.length < 3) {
-      distractors = [...distractors, ...shuffleArray(sameContinent).slice(0, 3 - distractors.length)];
-    }
-    if (distractors.length < 3) {
-      distractors = [...distractors, ...shuffleArray(other).slice(0, 3 - distractors.length)];
+      const otherCities = CHURCHES
+        .filter(c => c.city !== correct && !distractors.includes(c.city))
+        .map(c => c.city);
+      const unique = [...new Set(otherCities)];
+      distractors = [...distractors, ...shuffleArray(unique).slice(0, 3 - distractors.length)];
     }
 
     return shuffleArray([correct, ...distractors.slice(0, 3)]);
